@@ -2,60 +2,29 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Neon Ricochet</title>
 
     <style>
-        /* Tam ekran kilidi */
-        html, body { 
-            margin: 0; 
-            padding: 0; 
-            overflow: hidden; 
-            background-color: #000; 
-            width: 100%; 
-            height: 100%; 
-            overscroll-behavior: none;
-            touch-action: none;
-        }
+        body { margin: 0; padding: 0; overflow: hidden; background-color: #000; font-family: sans-serif; color: white; overscroll-behavior: none; }
         
         .page { 
             display: none; flex-direction: column; align-items: center; justify-content: center; 
-            width: 100vw; 
-            height: 100dvh; 
-            background: radial-gradient(circle, #1a1a2e, #000); 
+            width: 100vw; height: 100vh; background: radial-gradient(circle, #1a1a2e, #000); 
         }
         #menuPage { display: flex; }
         
-        /* Oyun sayfası: Taşmayı engellemek için box-sizing kullanıyoruz */
+        button { padding: 12px 30px; cursor: pointer; border-radius: 20px; background: #00e676; border: none; font-weight: bold; color: #000; }
+        
+        /* Oyun alanını esnek ama kontrollü yapıyoruz */
         #gamePage { 
             display: none; 
-            width: 100vw; 
-            height: 100dvh; 
-            position: relative;
-            box-sizing: border-box;
-            background: #000;
+            width: 100vw; height: 100vh; 
+            position: relative; overflow: hidden;
         }
+        canvas { display: block; width: 100%; height: 100%; }
         
-        canvas { 
-            display: block; 
-            width: 100%; 
-            height: 100%; 
-            object-fit: contain; /* Sığdırma garantisi */
-        }
-        
-        #cikisBtn { 
-            position: absolute; 
-            top: 10px; 
-            right: 10px; 
-            z-index: 100; 
-            padding: 10px 20px; 
-            background: rgba(255,255,255,0.2); 
-            color: white; 
-            border: none; 
-            border-radius: 5px;
-        }
-        
-        button { padding: 15px 40px; cursor: pointer; border-radius: 20px; background: #00e676; border: none; font-weight: bold; }
+        #cikisBtn { position: absolute; top: 10px; right: 10px; background: #555; color: white; padding: 10px; border: none; border-radius: 5px; z-index: 100; }
     </style>
 </head>
 <body>
@@ -84,9 +53,10 @@
             menuPage.style.display = 'none';
             gamePage.style.display = 'block';
 
-            // Ekran boyutlarını doğrudan canvas'a ata
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            // Ekranı tam olarak oku ve canvas'ı o boyuta getir
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
             
             ball.x = canvas.width / 2;
             ball.y = canvas.height / 2;
@@ -103,12 +73,12 @@
         function update() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // Çerçeve (Duvarlar)
+            // Duvarlar
             ctx.fillStyle = "#ff00ff";
-            ctx.fillRect(0, 0, canvas.width, wallThickness); // Üst
-            ctx.fillRect(0, canvas.height - wallThickness, canvas.width, wallThickness); // Alt
-            ctx.fillRect(0, 0, wallThickness, canvas.height); // Sol
-            ctx.fillRect(canvas.width - wallThickness, 0, wallThickness, canvas.height); // Sağ
+            ctx.fillRect(0, 0, canvas.width, wallThickness);
+            ctx.fillRect(0, canvas.height - wallThickness, canvas.width, wallThickness);
+            ctx.fillRect(0, 0, wallThickness, canvas.height);
+            ctx.fillRect(canvas.width - wallThickness, 0, wallThickness, canvas.height);
             
             // Top
             ctx.fillStyle = "#00FF00";
