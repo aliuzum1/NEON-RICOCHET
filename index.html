@@ -5,13 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Neon Ricochet</title>
 
+    <!-- Google AdSense Reklam Kodu -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4346551902420368" crossorigin="anonymous"></script>
+
     <style>
-        body { margin: 0; padding: 0; overflow: hidden; background-color: #000; font-family: sans-serif; color: white; overscroll-behavior: none; }
+        body { 
+            margin: 0; padding: 0; overflow: hidden; background-color: #000; 
+            font-family: sans-serif; color: white; overscroll-behavior: none;
+            touch-action: none; 
+        }
         
         .page { 
             display: none; flex-direction: column; align-items: center; justify-content: center; 
             width: 100vw; height: 100vh; background: radial-gradient(circle, #1a1a2e, #000); 
-            padding: 20px; box-sizing: border-box; overflow-y: auto;
+            padding: 20px; box-sizing: border-box; 
         }
         #menuPage { display: flex; }
         
@@ -24,16 +31,16 @@
         .secondary-btn { background: #555; color: white; }
         
         #gamePage { display: none; width: 100vw; height: 100vh; position: relative; overflow: hidden; background: #000; }
-        canvas { display: block; width: 100%; height: 100%; }
         
-        /* Düzeltilmiş ve Şık X Butonu */
+        canvas { display: block; width: 100vw; height: 100vh; }
+        
         #cikisBtn { 
-            position: absolute; top: 20px; right: 20px; 
-            width: 45px; height: 45px; border-radius: 50%; 
-            background: rgba(255, 255, 255, 0.1); color: white; 
-            border: 2px solid #fff; font-size: 20px; font-weight: bold;
+            position: absolute; top: 15px; right: 15px; 
+            width: 40px; height: 40px; border-radius: 50%; 
+            background: rgba(255, 255, 255, 0.2); color: white; 
+            border: 2px solid #fff; font-size: 18px; font-weight: bold;
             display: flex; align-items: center; justify-content: center;
-            z-index: 100; cursor: pointer; line-height: 1;
+            z-index: 100; cursor: pointer;
         }
     </style>
 </head>
@@ -49,10 +56,10 @@
         <button class="secondary-btn" onclick="bilgiyeGit()">Hakkında</button>
     </div>
 
-    <div id="infoPage" class="page" style="align-items: flex-start; justify-content: flex-start;">
+    <div id="infoPage" class="page">
         <h1>Hakkında</h1>
-        <p>Neon Ricochet, refleks tabanlı bir fizik oyunudur. Engellere çarpmadan topu sektörerek en uzun süre hayatta kalmaya çalışın!</p>
-        <button class="secondary-btn" style="width:100%;" onclick="menuyeDon()">Geri Dön</button>
+        <p>Refleks tabanlı fizik oyunu. Engellere çarpmadan topu sektir.</p>
+        <button class="secondary-btn" onclick="menuyeDon()">Geri Dön</button>
     </div>
 
     <div id="gamePage">
@@ -78,9 +85,8 @@
             infoPage.style.display = 'none';
             gamePage.style.display = 'block';
 
-            const rect = canvas.getBoundingClientRect();
-            canvas.width = rect.width;
-            canvas.height = rect.height;
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
             
             let speed = parseFloat(hizSlider.value);
             ball.x = canvas.width / 2;
@@ -108,7 +114,7 @@
             obstacles = [];
             const colors = ['#FF5733', '#FFC300', '#33FF57', '#3357FF'];
             const rows = 4;
-            const rowHeight = (canvas.height - 150) / rows;
+            const rowHeight = (canvas.height - 100) / rows;
             const blockW = 60;
             const blockH = 20;
 
@@ -129,7 +135,6 @@
         function update() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // Duvarlar
             ctx.fillStyle = "#ff00ff";
             ctx.fillRect(0, 0, canvas.width, wallThickness);
             ctx.fillRect(0, canvas.height - wallThickness, canvas.width, wallThickness);
@@ -146,13 +151,11 @@
             ball.x += ball.dx;
             ball.y += ball.dy;
             
-            // Duvar çarpışma (itme yöntemi)
             if (ball.x - ball.r < wallThickness) { ball.x = wallThickness + ball.r; ball.dx *= -1; }
             else if (ball.x + ball.r > canvas.width - wallThickness) { ball.x = canvas.width - wallThickness - ball.r; ball.dx *= -1; }
             if (ball.y - ball.r < wallThickness) { ball.y = wallThickness + ball.r; ball.dy *= -1; }
             else if (ball.y + ball.r > canvas.height - wallThickness) { ball.y = canvas.height - wallThickness - ball.r; ball.dy *= -1; }
             
-            // Engel Çarpışması (İtme yöntemi + Jitter)
             obstacles.forEach(obs => {
                 let closestX = Math.max(obs.x, Math.min(ball.x, obs.x + obs.w));
                 let closestY = Math.max(obs.y, Math.min(ball.y, obs.y + obs.h));
@@ -161,8 +164,6 @@
                 if (dist < ball.r) {
                     let overlapX = Math.abs(ball.x - closestX);
                     let overlapY = Math.abs(ball.y - closestY);
-
-                    // Topu engelin dışına it
                     if (overlapX > overlapY) {
                         ball.x = (ball.x < closestX) ? closestX - ball.r - 1 : closestX + ball.r + 1;
                         ball.dx *= -1;
