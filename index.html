@@ -11,29 +11,51 @@
         .page { 
             display: none; flex-direction: column; align-items: center; justify-content: center; 
             width: 100vw; height: 100vh; background: radial-gradient(circle, #1a1a2e, #000); 
+            padding: 15px; box-sizing: border-box;
         }
         #menuPage { display: flex; }
         
-        button { padding: 12px 30px; cursor: pointer; border-radius: 20px; background: #00e676; border: none; font-weight: bold; color: #000; }
+        h1 { font-size: 2.2rem; color: #00e676; text-shadow: 0 0 10px #00e676; margin-bottom: 20px; }
         
-        /* Oyun alanını esnek ama kontrollü yapıyoruz */
-        #gamePage { 
-            display: none; 
-            width: 100vw; height: 100vh; 
-            position: relative; overflow: hidden;
-        }
+        .control-group { margin-bottom: 20px; text-align: center; }
+        input[type=range] { width: 180px; accent-color: #00e676; }
+        
+        button { padding: 12px 30px; cursor: pointer; border-radius: 20px; background: #00e676; border: none; font-weight: bold; color: #000; margin: 8px 0; width: 250px; }
+        .secondary-btn { background: #555; color: white; }
+        
+        #gamePage { display: none; width: 100vw; height: 100vh; position: relative; overflow: hidden; background: #000; }
         canvas { display: block; width: 100%; height: 100%; }
         
-        #cikisBtn { position: absolute; top: 10px; right: 10px; background: #555; color: white; padding: 10px; border: none; border-radius: 5px; z-index: 100; }
+        #cikisBtn { position: absolute; top: 10px; right: 10px; background: #555; color: white; padding: 8px 15px; border: none; border-radius: 5px; z-index: 100; }
     </style>
 </head>
 <body>
 
+    <!-- MENÜ -->
     <div id="menuPage" class="page">
-        <h1 style="color:#00e676;">NEON RICOCHET</h1>
+        <h1>NEON RICOCHET</h1>
+        
+        <div class="control-group">
+            <label>Oyun Hızı</label><br>
+            <input type="range" id="hizSlider" min="2" max="10" step="0.5" value="4">
+        </div>
+
         <button onclick="oyunaGit()">OYUNU BAŞLAT</button>
+        <button class="secondary-btn" onclick="bilgiyeGit()">Hakkında & Yasal</button>
     </div>
 
+    <!-- BİLGİ SAYFASI -->
+    <div id="infoPage" class="page" style="text-align: left;">
+        <div style="max-width: 300px;">
+            <h2>Hakkında</h2>
+            <p style="color:#ccc;">Neon Ricochet, refleks tabanlı bir fizik oyunudur.</p>
+            <h2>Yasal</h2>
+            <p style="color:#ccc;">© 2026 Tüm hakları saklıdır.</p>
+            <button class="secondary-btn" onclick="menuyeDon()">Geri Dön</button>
+        </div>
+    </div>
+
+    <!-- OYUN -->
     <div id="gamePage">
         <button id="cikisBtn" onclick="menuyeDon()">X</button>
         <canvas id="oyunAlani"></canvas>
@@ -43,44 +65,53 @@
         const canvas = document.getElementById('oyunAlani');
         const ctx = canvas.getContext('2d');
         const menuPage = document.getElementById('menuPage');
+        const infoPage = document.getElementById('infoPage');
         const gamePage = document.getElementById('gamePage');
+        const hizSlider = document.getElementById('hizSlider');
         
-        let ball = { x: 0, y: 0, dx: 5, dy: 5, r: 10 };
+        let ball = { x: 0, y: 0, dx: 4, dy: 4, r: 10 };
         let animationId;
         const wallThickness = 15;
 
         function oyunaGit() {
             menuPage.style.display = 'none';
+            infoPage.style.display = 'none';
             gamePage.style.display = 'block';
 
-            // Ekranı tam olarak oku ve canvas'ı o boyuta getir
             const rect = canvas.getBoundingClientRect();
             canvas.width = rect.width;
             canvas.height = rect.height;
             
+            let speed = parseFloat(hizSlider.value);
             ball.x = canvas.width / 2;
             ball.y = canvas.height / 2;
+            ball.dx = speed; 
+            ball.dy = speed;
             
             update();
+        }
+
+        function bilgiyeGit() {
+            menuPage.style.display = 'none';
+            infoPage.style.display = 'flex';
         }
 
         function menuyeDon() {
             cancelAnimationFrame(animationId);
             gamePage.style.display = 'none';
+            infoPage.style.display = 'none';
             menuPage.style.display = 'flex';
         }
 
         function update() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // Duvarlar
             ctx.fillStyle = "#ff00ff";
             ctx.fillRect(0, 0, canvas.width, wallThickness);
             ctx.fillRect(0, canvas.height - wallThickness, canvas.width, wallThickness);
             ctx.fillRect(0, 0, wallThickness, canvas.height);
             ctx.fillRect(canvas.width - wallThickness, 0, wallThickness, canvas.height);
             
-            // Top
             ctx.fillStyle = "#00FF00";
             ctx.beginPath();
             ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
