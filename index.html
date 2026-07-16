@@ -2,55 +2,71 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Neon Ricochet</title>
 
     <style>
-        body { margin: 0; padding: 0; overflow: hidden; background-color: #000; font-family: sans-serif; color: white; overscroll-behavior: none; }
-        
-        .page { 
-            display: none; flex-direction: column; align-items: center; justify-content: center; 
-            min-height: 100vh; background: radial-gradient(circle, #1a1a2e, #000); 
-            padding: 15px; box-sizing: border-box; 
-        }
-        #menuPage { display: flex; }
-        
-        h1 { font-size: 2.2rem; color: #00e676; text-shadow: 0 0 10px #00e676; text-align: center; margin: 10px 0; }
-        .container { max-width: 500px; width: 100%; text-align: center; }
-        
-        button { padding: 12px 30px; cursor: pointer; border-radius: 20px; background: #00e676; border: none; font-weight: bold; color: #000; margin: 8px 0; width: 80%; max-width: 250px; font-size: 1rem; }
-        
-        /* OYUN ALANI DÜZENLEMESİ: Burayı küçülttük */
-        #gamePage { 
-            display: none; 
-            width: 95vw;    /* Ekranın %95'i kadar genişlik */
-            height: 90vh;   /* Ekranın %90'ı kadar yükseklik */
-            margin: 5vh auto; /* Ortalamak için */
-            position: relative; 
-            touch-action: none;
-            border: 2px solid #333; /* Kenarları belli olsun */
-            border-radius: 10px;
-        }
-        canvas { 
-            display: block; 
+        /* Tam ekran kilidi */
+        html, body { 
+            margin: 0; 
+            padding: 0; 
+            overflow: hidden; 
             background-color: #000; 
             width: 100%; 
             height: 100%; 
-            border-radius: 8px;
+            overscroll-behavior: none;
+            touch-action: none;
         }
         
-        #cikisBtn { position: absolute; top: -40px; right: 0; background: #555; color: white; padding: 5px 12px; border: none; z-index: 100; font-size: 0.8rem; }
+        .page { 
+            display: none; flex-direction: column; align-items: center; justify-content: center; 
+            width: 100vw; 
+            height: 100dvh; 
+            background: radial-gradient(circle, #1a1a2e, #000); 
+        }
+        #menuPage { display: flex; }
+        
+        /* Oyun sayfası: Taşmayı engellemek için box-sizing kullanıyoruz */
+        #gamePage { 
+            display: none; 
+            width: 100vw; 
+            height: 100dvh; 
+            position: relative;
+            box-sizing: border-box;
+            background: #000;
+        }
+        
+        canvas { 
+            display: block; 
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; /* Sığdırma garantisi */
+        }
+        
+        #cikisBtn { 
+            position: absolute; 
+            top: 10px; 
+            right: 10px; 
+            z-index: 100; 
+            padding: 10px 20px; 
+            background: rgba(255,255,255,0.2); 
+            color: white; 
+            border: none; 
+            border-radius: 5px;
+        }
+        
+        button { padding: 15px 40px; cursor: pointer; border-radius: 20px; background: #00e676; border: none; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div id="menuPage" class="page">
-        <h1>NEON RICOCHET</h1>
+        <h1 style="color:#00e676;">NEON RICOCHET</h1>
         <button onclick="oyunaGit()">OYUNU BAŞLAT</button>
     </div>
 
     <div id="gamePage">
-        <button id="cikisBtn" onclick="menuyeDon()">Menüden Çık</button>
+        <button id="cikisBtn" onclick="menuyeDon()">X</button>
         <canvas id="oyunAlani"></canvas>
     </div>
 
@@ -60,8 +76,7 @@
         const menuPage = document.getElementById('menuPage');
         const gamePage = document.getElementById('gamePage');
         
-        let ball = { x: 0, y: 0, dx: 4, dy: 4, r: 10 };
-        let obstacles = [];
+        let ball = { x: 0, y: 0, dx: 5, dy: 5, r: 10 };
         let animationId;
         const wallThickness = 15;
 
@@ -69,16 +84,13 @@
             menuPage.style.display = 'none';
             gamePage.style.display = 'block';
 
-            // Canvas boyutunu CSS'ten gelen kutu boyutuna göre ayarla
-            canvas.width = canvas.clientWidth;
-            canvas.height = canvas.clientHeight;
+            // Ekran boyutlarını doğrudan canvas'a ata
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
             
             ball.x = canvas.width / 2;
             ball.y = canvas.height / 2;
-            ball.dx = 5; 
-            ball.dy = 5;
             
-            generateObstacles();
             update();
         }
 
@@ -88,26 +100,17 @@
             menuPage.style.display = 'flex';
         }
 
-        function generateObstacles() {
-            obstacles = [];
-            for(let i = 0; i < 4; i++) {
-                obstacles.push({
-                    x: Math.random() * (canvas.width - 60),
-                    y: Math.random() * (canvas.height - 60),
-                    w: 50, h: 20
-                });
-            }
-        }
-
         function update() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // Duvarlar
-            ctx.fillStyle = "#ff00ff";
-            ctx.fillRect(0, 0, canvas.width, wallThickness);
-            ctx.fillRect(0, canvas.height - wallThickness, canvas.width, wallThickness);
-            ctx.fillRect(0, 0, wallThickness, canvas.height);
-            ctx.fillRect(canvas.width - wallThickness, 0, wallThickness, canvas.height);
             
+            // Çerçeve (Duvarlar)
+            ctx.fillStyle = "#ff00ff";
+            ctx.fillRect(0, 0, canvas.width, wallThickness); // Üst
+            ctx.fillRect(0, canvas.height - wallThickness, canvas.width, wallThickness); // Alt
+            ctx.fillRect(0, 0, wallThickness, canvas.height); // Sol
+            ctx.fillRect(canvas.width - wallThickness, 0, wallThickness, canvas.height); // Sağ
+            
+            // Top
             ctx.fillStyle = "#00FF00";
             ctx.beginPath();
             ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
