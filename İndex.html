@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Neon Ricochet</title>
+
+    <!-- Google AdSense Başlatma Kodu -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4346551902420368" crossorigin="anonymous"></script>
+
     <style>
         body { margin: 0; overflow: hidden; background-color: #000; font-family: sans-serif; color: white; }
         
@@ -43,7 +47,6 @@
     <div id="menuPage" class="page">
         <h1>NEON RICOCHET</h1>
         
-        <!-- Oyun Hızı Slider Geri Eklendi -->
         <div class="control-group">
             <label>Oyun Hızı</label><br>
             <input type="range" id="hizSlider" min="2" max="10" step="0.5" value="4">
@@ -52,6 +55,19 @@
         <div class="container">
             <button onclick="oyunaGit()">OYUNU BAŞLAT</button><br>
             <button style="background:#555; color:white;" onclick="bilgiyeGit()">Hakkında & Yasal</button>
+            
+            <!-- AdSense Reklam Kutusu -->
+            <div style="margin-top: 20px; min-height: 100px;">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-4346551902420368"
+                     data-ad-slot="8473678235"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>
+                     (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
         </div>
     </div>
 
@@ -59,16 +75,16 @@
     <div id="infoPage" class="page">
         <div class="container" style="text-align: left;">
             <h1 style="text-align: left;">Hakkında</h1>
-            <p>Neon Ricochet, reflekslerinizi test eden, neon estetiğiyle tasarlanmış bir fizik oyunudur. Amacınız, engellere çarparak topun sekmesini izlemek ve eğlenmektir.</p>
+            <p>Neon Ricochet, reflekslerinizi test eden, neon estetiğiyle tasarlanmış bir fizik oyunudur.</p>
             
             <h2>Gizlilik Politikası</h2>
-            <p>Kullanıcılarımızın gizliliğine önem veriyoruz. Bu uygulama hiçbir kişisel verinizi toplamaz, saklamaz veya üçüncü taraflarla paylaşmaz.</p>
+            <p>Bu uygulama hiçbir kişisel verinizi toplamaz, saklamaz veya üçüncü taraflarla paylaşmaz.</p>
             
             <h2>Kullanım Şartları</h2>
-            <p>Oyunun kullanımı kişiseldir. Ticari amaçla kopyalanması veya izinsiz dağıtılması yasaktır. Oyunun çalışmasından kaynaklanabilecek teknik hatalardan geliştirici sorumlu değildir.</p>
+            <p>Oyunun kullanımı kişiseldir. Ticari amaçla kopyalanması veya izinsiz dağıtılması yasaktır.</p>
             
             <h2>Yasal Haklar</h2>
-            <p>© 2026 Neon Ricochet. Tüm hakları saklıdır. Bu oyun açık kaynak kodlu mantıkla geliştirilmiştir.</p>
+            <p>© 2026 Neon Ricochet. Tüm hakları saklıdır.</p>
             
             <button style="width:100%; max-width:none; background: #555; color: white; margin-top: 15px;" onclick="menuyeDon()">Geri Dön</button>
         </div>
@@ -104,7 +120,6 @@
                 ball.x = canvas.width / 2;
                 ball.y = canvas.height / 2;
                 
-                // Hızı slider değerine göre dinamik olarak alıyoruz
                 let speed = parseFloat(hizSlider.value);
                 ball.dx = speed; 
                 ball.dy = speed;
