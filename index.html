@@ -1,181 +1,159 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Neon Ricochet</title>
+    
+    <!-- SEO Meta Tags -->
+    <title>Neon Ricochet - Free Neon Physics Arcade Game</title>
+    <meta name="description" content="Neon Ricochet is a fast-paced, minimalist physics-based arcade game. Test your reflexes, bounce off neon obstacles, and achieve the highest score! Free to play online.">
+    <meta name="keywords" content="neon ricochet, browser game, free online game, physics game, reflex game, arcade, html5, mobile gaming">
+    <link rel="canonical" href="https://yourdomain.com/">
+    <link rel="alternate" hreflang="x-default" href="https://yourdomain.com/">
 
-    <!-- Google AdSense Reklam Kodu -->
+    <!-- Schema Markup for Game Recognition -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org/",
+      "@type": "WebApplication",
+      "name": "Neon Ricochet",
+      "description": "A minimalist physics-based arcade game.",
+      "applicationCategory": "Game",
+      "browserRequirements": "Requires JavaScript",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+
+    <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4346551902420368" crossorigin="anonymous"></script>
 
     <style>
-        body { 
-            margin: 0; padding: 0; overflow: hidden; background-color: #000; 
-            font-family: sans-serif; color: white; overscroll-behavior: none;
-            touch-action: none; 
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { overflow: hidden; background-color: #000; font-family: 'Segoe UI', sans-serif; color: #ccc; touch-action: none; width: 100vw; height: 100vh; }
         
         .page { 
             display: none; flex-direction: column; align-items: center; justify-content: center; 
-            width: 100vw; height: 100vh; background: radial-gradient(circle, #1a1a2e, #000); 
-            padding: 20px; box-sizing: border-box; 
+            width: 100vw; height: 100vh; background: radial-gradient(circle, #1a1a2e, #000);
+            position: absolute; top: 0; left: 0; z-index: 10;
         }
+        
+        #infoPage { display: none; overflow-y: auto; padding: 40px; text-align: left; align-items: flex-start; justify-content: flex-start; }
         #menuPage { display: flex; }
         
-        h1 { font-size: 2.2rem; color: #00e676; text-shadow: 0 0 10px #00e676; margin-bottom: 20px; text-align: center; }
+        h1 { color: #00e676; text-shadow: 0 0 20px #00e676; margin-bottom: 20px; text-align: center; }
+        h2 { color: #00d4ff; margin: 20px 0 10px 0; }
+        p { margin-bottom: 15px; line-height: 1.6; max-width: 800px; }
         
-        .control-group { margin-bottom: 20px; text-align: center; }
-        input[type=range] { width: 180px; accent-color: #00e676; cursor: pointer; }
+        .checkbox-container { margin: 20px 0; color: #fff; font-size: 1rem; display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: #00e676; }
         
-        button { padding: 12px 30px; cursor: pointer; border-radius: 20px; background: #00e676; border: none; font-weight: bold; color: #000; margin: 8px 0; width: 250px; }
-        .secondary-btn { background: #555; color: white; }
+        button { padding: 15px 40px; cursor: pointer; border-radius: 30px; background: #00e676; border: none; font-weight: bold; color: #000; margin: 10px; font-size: 1rem; transition: 0.3s; }
+        button:disabled { background: #444; color: #888; cursor: not-allowed; }
+        .secondary-btn { background: transparent; border: 2px solid #555; color: #fff; }
         
-        #gamePage { display: none; width: 100vw; height: 100vh; position: relative; overflow: hidden; background: #000; }
+        #gamePage { display: none; width: 100vw; height: 100vh; position: relative; }
+        canvas { display: block; width: 100%; height: 100%; }
         
-        canvas { display: block; width: 100vw; height: 100vh; }
-        
-        #cikisBtn { 
-            position: absolute; top: 15px; right: 15px; 
-            width: 40px; height: 40px; border-radius: 50%; 
-            background: rgba(255, 255, 255, 0.2); color: white; 
-            border: 2px solid #fff; font-size: 18px; font-weight: bold;
-            display: flex; align-items: center; justify-content: center;
-            z-index: 100; cursor: pointer;
-        }
+        #skor { position: absolute; top: 20px; left: 20px; font-size: 1.2rem; color: #fff; z-index: 100; pointer-events: none; }
+        #cikisBtn { position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.1); color: white; border: none; font-size: 18px; z-index: 100; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div id="menuPage" class="page">
         <h1>NEON RICOCHET</h1>
-        <div class="control-group">
-            <label>Oyun Hızı</label><br>
-            <input type="range" id="hizSlider" min="2" max="10" step="0.5" value="4">
-        </div>
-        <button onclick="oyunaGit()">OYUNU BAŞLAT</button>
-        <button class="secondary-btn" onclick="bilgiyeGit()">Hakkında</button>
+        <label class="checkbox-container">
+            <input type="checkbox" id="kullanimSartlari"> I accept the Terms of Service & Privacy Policy.
+        </label>
+        <button id="baslatBtn" onclick="oyunaBasla()" disabled>START GAME</button>
+        <button class="secondary-btn" onclick="bilgiyeGit()">About & Legal</button>
     </div>
 
     <div id="infoPage" class="page">
-        <h1>Hakkında</h1>
-        <p>Refleks tabanlı fizik oyunu. Engellere çararak topu sektir.ve bunu izle başka birse yapmayacaksın topun hareketini izle </p>
-        <button class="secondary-btn" onclick="menuyeDon()">Geri Dön</button>
+        <div style="max-width: 800px; margin: 0 auto;">
+            <h1>About Neon Ricochet</h1>
+            <p>Neon Ricochet is a minimalist physics-based arcade game designed for global users. Enjoy the zen experience of neon lights and physics puzzles.</p>
+            <h2>Terms of Service</h2>
+            <p>This game is provided "as is". By playing, you agree not to reproduce or distribute the game content without permission.</p>
+            <h2>Privacy Policy</h2>
+            <p>We respect your privacy. This site uses Google AdSense to serve ads. These ads may use cookies to provide personalized content based on your interests.</p>
+            <button class="secondary-btn" onclick="menuyeDon()">Back to Menu</button>
+        </div>
     </div>
 
     <div id="gamePage">
+        <div id="skor">Score: 0</div>
         <button id="cikisBtn" onclick="menuyeDon()">✕</button>
         <canvas id="oyunAlani"></canvas>
     </div>
 
     <script>
-        const canvas = document.getElementById('oyunAlani');
-        const ctx = canvas.getContext('2d');
         const menuPage = document.getElementById('menuPage');
         const infoPage = document.getElementById('infoPage');
         const gamePage = document.getElementById('gamePage');
-        const hizSlider = document.getElementById('hizSlider');
-        
-        let ball = { x: 0, y: 0, dx: 4, dy: 4, r: 10 };
+        const canvas = document.getElementById('oyunAlani');
+        const ctx = canvas.getContext('2d');
+        const skorEl = document.getElementById('skor');
+        const checkbox = document.getElementById('kullanimSartlari');
+        const baslatBtn = document.getElementById('baslatBtn');
+
+        let ball = { x: 0, y: 0, dx: 0, dy: 0, r: 8 };
         let obstacles = [];
         let animationId;
-        const wallThickness = 15;
+        let score = 0;
+        const wallThickness = 10;
 
-        function oyunaGit() {
+        checkbox.addEventListener('change', () => { baslatBtn.disabled = !checkbox.checked; });
+
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas);
+
+        function oyunaBasla() {
+            if(!checkbox.checked) return;
             menuPage.style.display = 'none';
             infoPage.style.display = 'none';
             gamePage.style.display = 'block';
-
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            
-            let speed = parseFloat(hizSlider.value);
-            ball.x = canvas.width / 2;
-            ball.y = canvas.height / 2;
-            ball.dx = speed; 
-            ball.dy = speed;
-            
+            resizeCanvas();
+            score = 0;
+            let speed = 6;
+            ball.x = canvas.width / 2; ball.y = canvas.height / 2;
+            ball.dx = (Math.random() > 0.5 ? 1 : -1) * speed;
+            ball.dy = (Math.random() > 0.5 ? 1 : -1) * speed;
             generateObstacles();
             update();
         }
 
-        function bilgiyeGit() {
-            menuPage.style.display = 'none';
-            infoPage.style.display = 'flex';
-        }
-
-        function menuyeDon() {
-            cancelAnimationFrame(animationId);
-            gamePage.style.display = 'none';
-            infoPage.style.display = 'none';
-            menuPage.style.display = 'flex';
-        }
+        function bilgiyeGit() { menuPage.style.display = 'none'; infoPage.style.display = 'flex'; }
+        function menuyeDon() { cancelAnimationFrame(animationId); gamePage.style.display = 'none'; infoPage.style.display = 'none'; menuPage.style.display = 'flex'; }
 
         function generateObstacles() {
             obstacles = [];
-            const colors = ['#FF5733', '#FFC300', '#33FF57', '#3357FF'];
-            const rows = 4;
-            const rowHeight = (canvas.height - 100) / rows;
-            const blockW = 60;
-            const blockH = 20;
-
-            for(let row = 0; row < rows; row++) {
-                let count = (row % 2 === 0) ? 1 : 3;
-                let startY = 80 + (row * rowHeight);
-
-                for(let i = 0; i < count; i++) {
-                    let startX = (count === 1) ? (canvas.width / 2) - (blockW / 2) : (canvas.width / 4) * (i + 1) - (blockW / 2);
-                    obstacles.push({
-                        x: startX, y: startY, w: blockW, h: blockH,
-                        color: colors[Math.floor(Math.random() * colors.length)]
-                    });
-                }
+            const colors = ['#00e676', '#ff00ff', '#00d4ff', '#ffeb3b'];
+            for(let i = 0; i < 15; i++) {
+                obstacles.push({ x: Math.random() * (canvas.width - 100) + 50, y: Math.random() * (canvas.height - 100) + 50, w: 60, h: 20, color: colors[Math.floor(Math.random() * colors.length)], hit: false });
             }
         }
 
         function update() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#333";
+            ctx.fillRect(0, 0, canvas.width, wallThickness); ctx.fillRect(0, canvas.height - wallThickness, canvas.width, wallThickness);
+            ctx.fillRect(0, 0, wallThickness, canvas.height); ctx.fillRect(canvas.width - wallThickness, 0, wallThickness, canvas.height);
             
-            ctx.fillStyle = "#ff00ff";
-            ctx.fillRect(0, 0, canvas.width, wallThickness);
-            ctx.fillRect(0, canvas.height - wallThickness, canvas.width, wallThickness);
-            ctx.fillRect(0, 0, wallThickness, canvas.height);
-            ctx.fillRect(canvas.width - wallThickness, 0, wallThickness, canvas.height);
+            obstacles.forEach(o => { if (!o.hit) { ctx.shadowBlur = 15; ctx.shadowColor = o.color; ctx.fillStyle = o.color; ctx.fillRect(o.x, o.y, o.w, o.h); } });
             
-            obstacles.forEach(o => { ctx.fillStyle = o.color; ctx.fillRect(o.x, o.y, o.w, o.h); });
+            ctx.shadowBlur = 20; ctx.shadowColor = '#fff'; ctx.fillStyle = "#fff";
+            ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
             
-            ctx.fillStyle = "#00FF00";
-            ctx.beginPath();
-            ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
-            ctx.fill();
+            ball.x += ball.dx; ball.y += ball.dy;
+            if (ball.x - ball.r < wallThickness || ball.x + ball.r > canvas.width - wallThickness) ball.dx *= -1;
+            if (ball.y - ball.r < wallThickness || ball.y + ball.r > canvas.height - wallThickness) ball.dy *= -1;
             
-            ball.x += ball.dx;
-            ball.y += ball.dy;
-            
-            if (ball.x - ball.r < wallThickness) { ball.x = wallThickness + ball.r; ball.dx *= -1; }
-            else if (ball.x + ball.r > canvas.width - wallThickness) { ball.x = canvas.width - wallThickness - ball.r; ball.dx *= -1; }
-            if (ball.y - ball.r < wallThickness) { ball.y = wallThickness + ball.r; ball.dy *= -1; }
-            else if (ball.y + ball.r > canvas.height - wallThickness) { ball.y = canvas.height - wallThickness - ball.r; ball.dy *= -1; }
-            
-            obstacles.forEach(obs => {
-                let closestX = Math.max(obs.x, Math.min(ball.x, obs.x + obs.w));
-                let closestY = Math.max(obs.y, Math.min(ball.y, obs.y + obs.h));
-                let dist = Math.sqrt((ball.x - closestX)**2 + (ball.y - closestY)**2);
-                
-                if (dist < ball.r) {
-                    let overlapX = Math.abs(ball.x - closestX);
-                    let overlapY = Math.abs(ball.y - closestY);
-                    if (overlapX > overlapY) {
-                        ball.x = (ball.x < closestX) ? closestX - ball.r - 1 : closestX + ball.r + 1;
-                        ball.dx *= -1;
-                    } else {
-                        ball.y = (ball.y < closestY) ? closestY - ball.r - 1 : closestY + ball.r + 1;
-                        ball.dy *= -1;
-                    }
-                    ball.dx += (Math.random() - 0.5) * 0.2;
-                    ball.dy += (Math.random() - 0.5) * 0.2;
+            obstacles.forEach(o => {
+                if (!o.hit && ball.x > o.x && ball.x < o.x + o.w && ball.y > o.y && ball.y < o.y + o.h) {
+                    o.hit = true; ball.dx *= -1; ball.dy *= -1; score += 10; skorEl.innerText = "Score: " + score;
                 }
             });
-            
             animationId = requestAnimationFrame(update);
         }
     </script>
