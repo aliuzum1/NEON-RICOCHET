@@ -2,112 +2,195 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Neon Ricochet - Minimalist Fizik Oyunu</title>
-    
-    <!-- SEO -->
-    <meta name="description" content="Neon Ricochet, minimalist fizik tabanlı arcade oyunu.">
-    <meta name="keywords" content="neon, ricochet, arcade, fizik oyunu, tarayıcı oyunu">
-    
-    <!-- AdSense ve Geo -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Ricochet</title>
+    <meta name="description" content="Neon Ricochet, minimalist fizik tabanlı arcade oyunu. geliştirici ALİ ÜZÜM iletişim sayfasından iletişime geçiniz.">
     <meta name="google-adsense-account" content="ca-pub-4346551902420368">
-    <meta name="ads-txt" content="google.com, pub-4346551902420368, DIRECT, f08c47fec0942fa0">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4346551902420368" crossorigin="anonymous"></script>
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { overflow: hidden; background-color: #000; font-family: sans-serif; color: #ccc; touch-action: none; width: 100vw; height: 100vh; }
-        .page { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100vw; height: 100vh; background: radial-gradient(circle, #1a1a2e, #000); position: absolute; top: 0; left: 0; z-index: 10; }
+        body { background-color: #000; color: #fff; font-family: sans-serif; overflow: hidden; width: 100vw; height: 100vh; }
+        .page { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; width: 100vw; position: absolute; top:0; left:0; }
         
-        #gamePage { display: none; width: 100vw; height: 100vh; position: relative; }
-        canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
-
-        /* Yeni Arayüz Elemanları */
-        #speedControl { position: absolute; top: 20px; left: 20px; z-index: 100; color: #fff; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 5px; }
-        #exitBtn { position: absolute; top: 20px; right: 20px; z-index: 100; background: #ff5252; color: #fff; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-
-        button { padding: 15px 40px; cursor: pointer; border-radius: 30px; background: #00e676; border: none; font-weight: bold; color: #000; margin-top: 20px; }
+        #gamePage { display: none; z-index: 50; }
+        #menuPage { z-index: 10; }
+        .overlay { display: none; z-index: 100; background: rgba(0,0,0,0.98); text-align: center; padding: 20px; }
+        
+        /* Hakkında sayfaları için genişletilmiş alan */
+        .text-container { width: 100%; max-width: 600px; height: 400px; overflow-y: auto; text-align: left; padding: 25px; border: 1px solid #333; margin: 20px 0; background: #111; line-height: 1.8; color: #ccc; }
+        
+        .form-box { display: flex; flex-direction: column; gap: 15px; width: 350px; background: #111; padding: 20px; border-radius: 10px; border: 1px solid #333; }
+        input, textarea { padding: 12px; border-radius: 5px; border: 1px solid #444; background: #222; color: #fff; width: 100%; }
+        
+        #speedControl { position: absolute; top: 10px; left: 10px; z-index: 100; background: rgba(0,0,0,0.7); padding: 10px; border: 1px solid #444; }
+        #exitBtn { position: absolute; top: 10px; right: 10px; z-index: 100; cursor: pointer; padding: 10px 20px; background: #ff0000; color: white; border: none; font-size: 20px; }
+        
+        canvas { display: block; width: 100%; height: 100%; }
+        .menu-btn { padding: 15px 30px; margin: 10px; cursor: pointer; border-radius: 5px; border: none; font-size: 16px; background: #333; color: #fff; }
+        .nav-btn { padding: 10px 20px; margin: 5px; cursor: pointer; border-radius: 5px; border: none; font-size: 14px; background: #444; color: #fff; }
     </style>
 </head>
 <body>
 
     <div id="menuPage" class="page">
         <h1>NEON RICOCHET</h1>
-        
-        <div class="ad-container" style="margin: 20px;">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-4346551902420368"
-                 data-ad-slot="BURAYA_SLOT_ID_YAZ"
-                 data-ad-format="auto"></ins>
+        <div style="margin: 20px;">
+            <ins class="adsbygoogle" style="display:block; width:300px; height:250px;" data-ad-client="ca-pub-4346551902420368" data-ad-slot="BURAYA_SLOT_ID_YAZ" data-ad-format="auto"></ins>
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
-
-        <button onclick="oyunaBasla()">START GAME</button>
+        <button class="menu-btn" onclick="document.getElementById('aboutPage').style.display='flex'">Hakkında</button>
+        <button class="menu-btn" onclick="document.getElementById('contactPage').style.display='flex'">İletişim</button>
+        <label style="margin: 10px; cursor: pointer;"><input type="checkbox" id="kullanimSartlari"> Terms accepted.</label>
+        <button id="baslatBtn" class="menu-btn" onclick="oyunaBasla()" disabled style="background: #00e676; color: #000;">START GAME</button>
     </div>
 
-    <div id="gamePage">
+    <div id="aboutPage" class="page overlay">
+        <div style="max-width: 600px;">
+            <h2>Hakkında</h2>
+            
+            <div id="aboutContent1" class="text-container">
+                <h3>Bölüm 1: NEON RICOCHET Markası</h3>
+                <p>Neon Ricochet, minimalist tasarım anlayışının dijital oyun dünyasındaki zirvesini temsil eden bir markadır. Görsel karmaşadan arındırılmış, tamamen kullanıcı odaklı ve yüksek performanslı fizik simülasyonları üzerine kurulu bir oyun ekosistemidir.</p>
+                <p><strong>BU MARKA SATILIKTIR:</strong> Neon Ricochet ismi, logosu ve genel tasarım dili, kendi oyun platformunu kurmak isteyen yatırımcılar veya geliştiriciler için komple satılıktır. Markamız, akılda kalıcı isminden, kendine has neon estetiğine kadar bir bütün olarak devredilmektedir.</p>
+                <p>Bu projeyi satın alarak, halihazırda optimize edilmiş bir arcade oyununa, sadık bir kitle potansiyeline ve ölçeklenebilir bir altyapıya sahip olabilirsiniz. Satın alma ve lisanslama detayları için lütfen İletişim sayfasından bizimle irtibata geçiniz.</p>
+            </div>
+
+            <div id="aboutContent2" class="text-container" style="display:none;">
+                <h3>Bölüm 2: Oyun Motoru ve Kaynak Kodlar</h3>
+                <p>Oyunun temelini oluşturan özel fizik motoru, 35 derecelik sapma mekaniği ve dinamik yansıma algoritmaları tamamen tarafımızca geliştirilmiştir. <strong>Oyunun kendisi ve kaynak kodları (Source Code) satılıktır.</strong></p>
+                <p><strong>Neden Satın Almalısınız?</strong></p>
+                <ul>
+                    <li><strong>Performans:</strong> Düşük gecikme süresi ile her cihazda stabil çalışma.</li>
+                    <li><strong>Esneklik:</strong> Motorumuz, farklı oyun türlerine (platform, puzzle, arcade) kolaylıkla entegre edilebilir.</li>
+                    <li><strong>Hazır Altyapı:</strong> SEO uyumlu meta etiketleri, AdSense reklam entegrasyonu ve mobil uyumlu kontrol panelleri ile anahtar teslim çözüm.</li>
+                </ul>
+                <p>Motorumuz, sadece bir oyun değil, kendi oyunlarınızı inşa edebileceğiniz bir temeldir. İster kendi sitenizde yayınlayın, ister mobil mağazalara port edin; tüm hakları size ait olacaktır.</p>
+            </div>
+
+            <div id="aboutContent3" class="text-container" style="display:none;">
+                <h3>Bölüm 3: Lisanslama ve İletişim</h3>
+                <p>Neon Ricochet oyununun ve oyun motorunun mülkiyet haklarını devralmak için izlemeniz gereken süreç oldukça basittir. İlgilenen alıcılar için; kaynak kodların teslimatı, teknik destek paketi ve marka devir sözleşmesi süreçleri bulunmaktadır.</p>
+                <p><strong>Satın Alma Süreci:</strong></p>
+                <ol>
+                    <li>İletişim formunu kullanarak "Satın Alma Teklifi" başlığıyla bize ulaşın.</li>
+                    <li>Teknik detayları ve lisans haklarını görüşmek üzere toplantı planlayalım.</li>
+                    <li>Sözleşme ve devir işlemlerini tamamlayarak oyunun tek sahibi olun.</li>
+                </ol>
+                <p><strong>İletişim:</strong> Tüm teklifleriniz ve sorularınız için İletişim sayfasını ziyaret ederek formumuzu doldurunuz. Ekibimiz en kısa sürede size geri dönüş sağlayacaktır. Neon Ricochet ile dijital dünyanın yeni sahibi siz olun!</p>
+            </div>
+
+            <div>
+                <button class="nav-btn" onclick="changeAboutPage(-1)">Önceki</button>
+                <span id="aboutIndicator" style="margin: 0 10px;">1 / 3</span>
+                <button class="nav-btn" onclick="changeAboutPage(1)">Sonraki</button>
+            </div>
+
+            <button class="menu-btn" style="background:#ff0000; margin-top:20px; padding: 10px 20px;" onclick="document.getElementById('aboutPage').style.display='none'">Kapat</button>
+        </div>
+    </div>
+
+    <div id="contactPage" class="page overlay">
+        <form class="form-box" onsubmit="event.preventDefault(); alert('Mesajınız başarıyla iletildi. En kısa sürede sizinle iletişime geçeceğiz.'); document.getElementById('contactPage').style.display='none';">
+            <h2>İletişim</h2>
+            <input type="text" placeholder="Adınız" required>
+            <input type="email" placeholder="E-posta" required>
+            <textarea placeholder="Mesajınız" rows="5" required></textarea>
+            <button type="submit" class="menu-btn" style="background:#00e676; color:#000;">Gönder</button>
+            <button type="button" class="menu-btn" style="background:#555;" onclick="document.getElementById('contactPage').style.display='none'">Geri Dön</button>
+        </form>
+    </div>
+
+    <div id="gamePage" class="page">
         <div id="speedControl">
-            Speed: <input type="range" id="speedSlider" min="2" max="15" value="6">
+            Hız: <input type="range" id="speedSlider" min="2" max="15" value="6">
         </div>
         <button id="exitBtn" onclick="oyundanCik()">✕</button>
         <canvas id="oyunAlani"></canvas>
     </div>
 
     <script>
-        const canvas = document.getElementById('oyunAlani'), ctx = canvas.getContext('2d');
+        let currentAboutPage = 1;
+        const totalAboutPages = 3;
+
+        function changeAboutPage(direction) {
+            document.getElementById('aboutContent' + currentAboutPage).style.display = 'none';
+            currentAboutPage += direction;
+            if (currentAboutPage < 1) currentAboutPage = totalAboutPages;
+            if (currentAboutPage > totalAboutPages) currentAboutPage = 1;
+            document.getElementById('aboutContent' + currentAboutPage).style.display = 'block';
+            document.getElementById('aboutIndicator').innerText = currentAboutPage + ' / ' + totalAboutPages;
+        }
+
+        const canvas = document.getElementById('oyunAlani');
+        const ctx = canvas.getContext('2d');
         const speedSlider = document.getElementById('speedSlider');
+        const checkbox = document.getElementById('kullanimSartlari');
+        const startBtn = document.getElementById('baslatBtn');
+        
         let ball = { x: 0, y: 0, dx: 6, dy: 6, r: 8 };
-        let obstacles = [], animationId;
+        let obstacles = [];
+        let animationId = null;
+
+        checkbox.addEventListener('change', () => { startBtn.disabled = !checkbox.checked; });
 
         function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resizeCanvas);
 
         function generateObstacles() {
             obstacles = [];
             const rows = [1, 3, 2, 3];
-            const rowHeight = canvas.height / 5;
+            const rowHeight = window.innerHeight / 5;
             rows.forEach((count, rowIndex) => {
                 const y = rowHeight * (rowIndex + 1);
-                const spacing = canvas.width / (count + 1);
-                const w = (count === 1 || count === 2) ? 80 : 20;
-                const h = (count === 1 || count === 2) ? 20 : 80;
+                const spacing = window.innerWidth / (count + 1);
                 for (let i = 0; i < count; i++) {
-                    obstacles.push({ x: (spacing * (i + 1)) - (w / 2), y: y - (h / 2), w: w, h: h });
+                    obstacles.push({ x: (spacing * (i + 1)) - 40, y: y - 10, w: 80, h: 20 });
                 }
             });
         }
 
+        function bounce35(vx, vy) {
+            let speed = Math.sqrt(vx * vx + vy * vy);
+            let angle = Math.atan2(vy, vx);
+            angle += (35 * Math.PI / 180); 
+            return { dx: speed * Math.cos(angle), dy: speed * Math.sin(angle) };
+        }
+
         function update() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; 
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
             let speed = parseFloat(speedSlider.value);
-            ball.x += ball.dx;
+            ball.x += ball.dx * (speed / 6);
+            ball.y += ball.dy * (speed / 6);
+
             obstacles.forEach(o => {
                 if (ball.x + ball.r > o.x && ball.x - ball.r < o.x + o.w && ball.y + ball.r > o.y && ball.y - ball.r < o.y + o.h) {
                     ball.dx *= -1;
-                }
-            });
-            if (ball.x - ball.r < 0 || ball.x + ball.r > canvas.width) ball.dx *= -1;
-            
-            ball.y += ball.dy;
-            obstacles.forEach(o => {
-                if (ball.x + ball.r > o.x && ball.x - ball.r < o.x + o.w && ball.y + ball.r > o.y && ball.y - ball.r < o.y + o.h) {
                     ball.dy *= -1;
+                    let deflected = bounce35(ball.dx, ball.dy);
+                    ball.dx = deflected.dx;
+                    ball.dy = deflected.dy;
                 }
             });
+
+            if (ball.x - ball.r < 0 || ball.x + ball.r > canvas.width) ball.dx *= -1;
             if (ball.y - ball.r < 0 || ball.y + ball.r > canvas.height) ball.dy *= -1;
             
             ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2); ctx.fill();
-            obstacles.forEach(o => { ctx.fillStyle = '#00e676'; ctx.fillRect(o.x, o.y, o.w, o.h); });
+            ctx.fillStyle = '#00e676';
+            obstacles.forEach(o => ctx.fillRect(o.x, o.y, o.w, o.h));
+            
             animationId = requestAnimationFrame(update);
         }
 
         function oyunaBasla() {
             document.getElementById('menuPage').style.display = 'none';
-            document.getElementById('gamePage').style.display = 'block';
+            document.getElementById('gamePage').style.display = 'flex';
             resizeCanvas();
             ball.x = canvas.width / 2; ball.y = canvas.height / 2;
             generateObstacles();
+            if(animationId) cancelAnimationFrame(animationId);
             update();
         }
 
