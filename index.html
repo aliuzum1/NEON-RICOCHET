@@ -3,159 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
-    <!-- SEO Meta Tags -->
-    <title>Neon Ricochet - Free Neon Physics Arcade Game</title>
-    <meta name="description" content="Neon Ricochet is a fast-paced, minimalist physics-based arcade game. Test your reflexes, bounce off neon obstacles, and achieve the highest score! Free to play online.">
-    <meta name="keywords" content="neon ricochet, browser game, free online game, physics game, reflex game, arcade, html5, mobile gaming">
-    <link rel="canonical" href="https://yourdomain.com/">
-    <link rel="alternate" hreflang="x-default" href="https://yourdomain.com/">
-
-    <!-- Schema Markup for Game Recognition -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org/",
-      "@type": "WebApplication",
-      "name": "Neon Ricochet",
-      "description": "A minimalist physics-based arcade game.",
-      "applicationCategory": "Game",
-      "browserRequirements": "Requires JavaScript",
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
-    }
-    </script>
-
-    <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4346551902420368" crossorigin="anonymous"></script>
-
+    <title>Neon Ricochet - Play Free Arcade & Physics Games</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { overflow: hidden; background-color: #000; font-family: 'Segoe UI', sans-serif; color: #ccc; touch-action: none; width: 100vw; height: 100vh; }
-        
-        .page { 
-            display: none; flex-direction: column; align-items: center; justify-content: center; 
-            width: 100vw; height: 100vh; background: radial-gradient(circle, #1a1a2e, #000);
-            position: absolute; top: 0; left: 0; z-index: 10;
-        }
-        
-        #infoPage { display: none; overflow-y: auto; padding: 40px; text-align: left; align-items: flex-start; justify-content: flex-start; }
+        .page { display: none; flex-direction: column; align-items: center; justify-content: center; width: 100vw; height: 100vh; background: radial-gradient(circle, #1a1a2e, #000); position: absolute; top: 0; left: 0; z-index: 10; }
         #menuPage { display: flex; }
-        
+        #infoPage { display: none; overflow-y: auto; padding: 40px; align-items: flex-start; justify-content: flex-start; }
         h1 { color: #00e676; text-shadow: 0 0 20px #00e676; margin-bottom: 20px; text-align: center; }
-        h2 { color: #00d4ff; margin: 20px 0 10px 0; }
-        p { margin-bottom: 15px; line-height: 1.6; max-width: 800px; }
-        
         .checkbox-container { margin: 20px 0; color: #fff; font-size: 1rem; display: flex; align-items: center; gap: 10px; cursor: pointer; }
         input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: #00e676; }
-        
         button { padding: 15px 40px; cursor: pointer; border-radius: 30px; background: #00e676; border: none; font-weight: bold; color: #000; margin: 10px; font-size: 1rem; transition: 0.3s; }
         button:disabled { background: #444; color: #888; cursor: not-allowed; }
         .secondary-btn { background: transparent; border: 2px solid #555; color: #fff; }
-        
         #gamePage { display: none; width: 100vw; height: 100vh; position: relative; }
-        canvas { display: block; width: 100%; height: 100%; }
-        
-        #skor { position: absolute; top: 20px; left: 20px; font-size: 1.2rem; color: #fff; z-index: 100; pointer-events: none; }
-        #cikisBtn { position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.1); color: white; border: none; font-size: 18px; z-index: 100; cursor: pointer; }
+        canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
+        #skor { position: absolute; top: 20px; left: 20px; font-size: 1.5rem; color: #fff; z-index: 100; pointer-events: none; text-shadow: 0 0 10px #000; }
+        #speedControl { position: absolute; bottom: 20px; right: 20px; z-index: 100; color: #fff; }
     </style>
 </head>
 <body>
 
-    <div id="menuPage" class="page">
+    <div id="menuPage" class="page" style="display: flex;">
         <h1>NEON RICOCHET</h1>
         <label class="checkbox-container">
-            <input type="checkbox" id="kullanimSartlari"> I accept the Terms of Service & Privacy Policy.
+            <input type="checkbox" id="kullanimSartlari"> I accept the Terms & Privacy Policy.
         </label>
         <button id="baslatBtn" onclick="oyunaBasla()" disabled>START GAME</button>
         <button class="secondary-btn" onclick="bilgiyeGit()">About & Legal</button>
     </div>
 
-    <div id="infoPage" class="page">
-        <div style="max-width: 800px; margin: 0 auto;">
-            <h1>About Neon Ricochet</h1>
-            <p>Neon Ricochet is a minimalist physics-based arcade game designed for global users. Enjoy the zen experience of neon lights and physics puzzles.</p>
-            <h2>Terms of Service</h2>
-            <p>This game is provided "as is". By playing, you agree not to reproduce or distribute the game content without permission.</p>
-            <h2>Privacy Policy</h2>
-            <p>We respect your privacy. This site uses Google AdSense to serve ads. These ads may use cookies to provide personalized content based on your interests.</p>
-            <button class="secondary-btn" onclick="menuyeDon()">Back to Menu</button>
+    <div id="infoPage" class="page" style="display: none; overflow-y: auto; padding: 40px; align-items: flex-start; justify-content: flex-start;">
+        <div style="max-width: 800px; width: 100%; color: #fff; text-align: left; font-family: 'Segoe UI', sans-serif;">
+            <h1 style="color: #00e676; border-bottom: 2px solid #00e676; padding-bottom: 10px;">NEON RICOCHET: DOKÜMANTASYON</h1>
+            
+            <section style="margin: 30px 0;">
+                <h2 style="color: #00e676; margin-bottom: 10px;">1. Oyun Felsefesi</h2>
+                <p style="line-height: 1.8; color: #ccc;">Neon Ricochet, minimalist estetik ve yüksek hassasiyetli fizik simülasyonlarının birleştiği dijital bir deneyimdir.</p>
+            </section>
+
+            <section style="margin: 30px 0; background: rgba(255,255,255,0.03); padding: 20px; border-radius: 10px;">
+                <h2 style="color: #00e676; margin-bottom: 10px;">2. Teknik Mimari</h2>
+                <p style="line-height: 1.8; color: #ccc;">Oyunumuz kendi geliştirdiğimiz çarpışma algılama algoritmaları ve optimize edilmiş Canvas API ile çalışır. oyunun markasi ve oyunun kendisi satiliktir geri bildirim kismindan konu iletisim bilgilerinizi gonerebilirsiniz en kisa zamanda size donus yapilacak</p>
+            </section>
+
+            <section style="margin: 30px 0;">
+                <h2 style="color: #00e676; margin-bottom: 10px;">3. Yasal Bildiriler</h2>
+                <p style="line-height: 1.8; color: #ccc;">Tüm hakları saklıdır. Oyun "olduğu gibi" sunulmaktadır.</p>
+            </section>
+
+            <h2 style="color: #00e676; margin-bottom: 15px;">5. İletişim</h2>
+            <form action="https://formspree.io/f/xnjedlwa" method="POST" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 50px;">
+                <textarea name="message" required placeholder="Geri bildiriminiz..." style="padding: 15px; border-radius: 8px; height: 120px; background: #1a1a2e; border: 1px solid #444; color: #fff;"></textarea>
+                <button type="submit" style="padding: 15px; background: #00e676; border: none; border-radius: 8px; color: #000; font-weight: bold; cursor: pointer;">MESAJI GÖNDER</button>
+            </form>
+            <button class="secondary-btn" onclick="menuyeDon()" style="width: 100%; margin-bottom: 50px;">MENÜYE DÖN</button>
         </div>
     </div>
 
     <div id="gamePage">
         <div id="skor">Score: 0</div>
-        <button id="cikisBtn" onclick="menuyeDon()">✕</button>
+        <div id="speedControl">
+            Speed: <input type="range" id="speedSlider" min="2" max="15" value="6">
+        </div>
         <canvas id="oyunAlani"></canvas>
     </div>
 
     <script>
-        const menuPage = document.getElementById('menuPage');
-        const infoPage = document.getElementById('infoPage');
-        const gamePage = document.getElementById('gamePage');
-        const canvas = document.getElementById('oyunAlani');
-        const ctx = canvas.getContext('2d');
-        const skorEl = document.getElementById('skor');
-        const checkbox = document.getElementById('kullanimSartlari');
-        const baslatBtn = document.getElementById('baslatBtn');
-
+        const menuPage = document.getElementById('menuPage'), infoPage = document.getElementById('infoPage'), gamePage = document.getElementById('gamePage');
+        const canvas = document.getElementById('oyunAlani'), ctx = canvas.getContext('2d'), skorEl = document.getElementById('skor');
+        const checkbox = document.getElementById('kullanimSartlari'), baslatBtn = document.getElementById('baslatBtn');
+        const speedSlider = document.getElementById('speedSlider');
+        
         let ball = { x: 0, y: 0, dx: 0, dy: 0, r: 8 };
         let obstacles = [];
-        let animationId;
         let score = 0;
-        const wallThickness = 10;
+        let animationId;
 
         checkbox.addEventListener('change', () => { baslatBtn.disabled = !checkbox.checked; });
-
         function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.addEventListener('resize', resizeCanvas);
 
         function oyunaBasla() {
             if(!checkbox.checked) return;
-            menuPage.style.display = 'none';
-            infoPage.style.display = 'none';
-            gamePage.style.display = 'block';
+            menuPage.style.display = 'none'; gamePage.style.display = 'block';
             resizeCanvas();
             score = 0;
-            let speed = 6;
             ball.x = canvas.width / 2; ball.y = canvas.height / 2;
-            ball.dx = (Math.random() > 0.5 ? 1 : -1) * speed;
-            ball.dy = (Math.random() > 0.5 ? 1 : -1) * speed;
+            ball.dx = 6; ball.dy = 6;
             generateObstacles();
             update();
         }
 
-        function bilgiyeGit() { menuPage.style.display = 'none'; infoPage.style.display = 'flex'; }
-        function menuyeDon() { cancelAnimationFrame(animationId); gamePage.style.display = 'none'; infoPage.style.display = 'none'; menuPage.style.display = 'flex'; }
-
         function generateObstacles() {
             obstacles = [];
-            const colors = ['#00e676', '#ff00ff', '#00d4ff', '#ffeb3b'];
-            for(let i = 0; i < 15; i++) {
-                obstacles.push({ x: Math.random() * (canvas.width - 100) + 50, y: Math.random() * (canvas.height - 100) + 50, w: 60, h: 20, color: colors[Math.floor(Math.random() * colors.length)], hit: false });
-            }
+            const rows = [1, 3, 2, 3];
+            const rowHeight = canvas.height / 5;
+            rows.forEach((count, rowIndex) => {
+                const y = rowHeight * (rowIndex + 1);
+                const spacing = canvas.width / (count + 1);
+                for (let i = 0; i < count; i++) {
+                    obstacles.push({ x: spacing * (i + 1) - 10, y: y, w: 20, h: 80, color: '#00e676' });
+                }
+            });
         }
 
         function update() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#333";
-            ctx.fillRect(0, 0, canvas.width, wallThickness); ctx.fillRect(0, canvas.height - wallThickness, canvas.width, wallThickness);
-            ctx.fillRect(0, 0, wallThickness, canvas.height); ctx.fillRect(canvas.width - wallThickness, 0, wallThickness, canvas.height);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            obstacles.forEach(o => { if (!o.hit) { ctx.shadowBlur = 15; ctx.shadowColor = o.color; ctx.fillStyle = o.color; ctx.fillRect(o.x, o.y, o.w, o.h); } });
+            let speed = parseFloat(speedSlider.value);
+            let currentSpeed = Math.sqrt(ball.dx**2 + ball.dy**2);
+            ball.dx = (ball.dx / currentSpeed) * speed;
+            ball.dy = (ball.dy / currentSpeed) * speed;
             
-            ctx.shadowBlur = 20; ctx.shadowColor = '#fff'; ctx.fillStyle = "#fff";
-            ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
-            
-            ball.x += ball.dx; ball.y += ball.dy;
-            if (ball.x - ball.r < wallThickness || ball.x + ball.r > canvas.width - wallThickness) ball.dx *= -1;
-            if (ball.y - ball.r < wallThickness || ball.y + ball.r > canvas.height - wallThickness) ball.dy *= -1;
-            
+            ball.x += ball.dx;
             obstacles.forEach(o => {
-                if (!o.hit && ball.x > o.x && ball.x < o.x + o.w && ball.y > o.y && ball.y < o.y + o.h) {
-                    o.hit = true; ball.dx *= -1; ball.dy *= -1; score += 10; skorEl.innerText = "Score: " + score;
+                if (ball.x + ball.r > o.x && ball.x - ball.r < o.x + o.w && ball.y + ball.r > o.y && ball.y - ball.r < o.y + o.h) {
+                    ball.dx *= -1;
+                    ball.x = (ball.dx > 0) ? o.x + o.w + ball.r : o.x - ball.r;
+                    score += 10; skorEl.innerText = "Score: " + score;
                 }
             });
+            if (ball.x - ball.r < 0 || ball.x + ball.r > canvas.width) { ball.dx *= -1; ball.x = (ball.x < ball.r) ? ball.r : canvas.width - ball.r; }
+            
+            ball.y += ball.dy;
+            obstacles.forEach(o => {
+                if (ball.x + ball.r > o.x && ball.x - ball.r < o.x + o.w && ball.y + ball.r > o.y && ball.y - ball.r < o.y + o.h) {
+                    ball.dy *= -1;
+                    ball.y = (ball.dy > 0) ? o.y + o.h + ball.r : o.y - ball.r;
+                    score += 10; skorEl.innerText = "Score: " + score;
+                }
+            });
+            if (ball.y - ball.r < 0 || ball.y + ball.r > canvas.height) { ball.dy *= -1; ball.y = (ball.y < ball.r) ? ball.r : canvas.height - ball.r; }
+            
+            ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2); ctx.fill();
+            obstacles.forEach(o => { ctx.fillStyle = o.color; ctx.fillRect(o.x, o.y, o.w, o.h); });
             animationId = requestAnimationFrame(update);
         }
+
+        function bilgiyeGit() { menuPage.style.display = 'none'; infoPage.style.display = 'flex'; }
+        function menuyeDon() { cancelAnimationFrame(animationId); gamePage.style.display = 'none'; infoPage.style.display = 'none'; menuPage.style.display = 'flex'; }
     </script>
 </body>
 </html>
