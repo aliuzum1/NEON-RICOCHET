@@ -1,99 +1,67 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Neon Ricochet - Play Free Arcade & Physics Games</title>
+    <title>Neon Ricochet - Minimalist Fizik Oyunu</title>
+    
+    <!-- SEO -->
+    <meta name="description" content="Neon Ricochet, minimalist fizik tabanlı arcade oyunu.">
+    <meta name="keywords" content="neon, ricochet, arcade, fizik oyunu, tarayıcı oyunu">
+    
+    <!-- AdSense ve Geo -->
+    <meta name="google-adsense-account" content="ca-pub-4346551902420368">
+    <meta name="ads-txt" content="google.com, pub-4346551902420368, DIRECT, f08c47fec0942fa0">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4346551902420368" crossorigin="anonymous"></script>
+
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { overflow: hidden; background-color: #000; font-family: 'Segoe UI', sans-serif; color: #ccc; touch-action: none; width: 100vw; height: 100vh; }
-        .page { display: none; flex-direction: column; align-items: center; justify-content: center; width: 100vw; height: 100vh; background: radial-gradient(circle, #1a1a2e, #000); position: absolute; top: 0; left: 0; z-index: 10; }
-        #menuPage { display: flex; }
-        #infoPage { display: none; overflow-y: auto; padding: 40px; align-items: flex-start; justify-content: flex-start; }
-        h1 { color: #00e676; text-shadow: 0 0 20px #00e676; margin-bottom: 20px; text-align: center; }
-        .checkbox-container { margin: 20px 0; color: #fff; font-size: 1rem; display: flex; align-items: center; gap: 10px; cursor: pointer; }
-        input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: #00e676; }
-        button { padding: 15px 40px; cursor: pointer; border-radius: 30px; background: #00e676; border: none; font-weight: bold; color: #000; margin: 10px; font-size: 1rem; transition: 0.3s; }
-        button:disabled { background: #444; color: #888; cursor: not-allowed; }
-        .secondary-btn { background: transparent; border: 2px solid #555; color: #fff; }
+        body { overflow: hidden; background-color: #000; font-family: sans-serif; color: #ccc; touch-action: none; width: 100vw; height: 100vh; }
+        .page { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100vw; height: 100vh; background: radial-gradient(circle, #1a1a2e, #000); position: absolute; top: 0; left: 0; z-index: 10; }
+        
         #gamePage { display: none; width: 100vw; height: 100vh; position: relative; }
         canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
-        #skor { position: absolute; top: 20px; left: 20px; font-size: 1.5rem; color: #fff; z-index: 100; pointer-events: none; text-shadow: 0 0 10px #000; }
-        #speedControl { position: absolute; bottom: 20px; right: 20px; z-index: 100; color: #fff; }
+
+        /* Yeni Arayüz Elemanları */
+        #speedControl { position: absolute; top: 20px; left: 20px; z-index: 100; color: #fff; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 5px; }
+        #exitBtn { position: absolute; top: 20px; right: 20px; z-index: 100; background: #ff5252; color: #fff; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+
+        button { padding: 15px 40px; cursor: pointer; border-radius: 30px; background: #00e676; border: none; font-weight: bold; color: #000; margin-top: 20px; }
     </style>
 </head>
 <body>
 
-    <div id="menuPage" class="page" style="display: flex;">
+    <div id="menuPage" class="page">
         <h1>NEON RICOCHET</h1>
-        <label class="checkbox-container">
-            <input type="checkbox" id="kullanimSartlari"> I accept the Terms & Privacy Policy.
-        </label>
-        <button id="baslatBtn" onclick="oyunaBasla()" disabled>START GAME</button>
-        <button class="secondary-btn" onclick="bilgiyeGit()">About & Legal</button>
-    </div>
-
-    <div id="infoPage" class="page" style="display: none; overflow-y: auto; padding: 40px; align-items: flex-start; justify-content: flex-start;">
-        <div style="max-width: 800px; width: 100%; color: #fff; text-align: left; font-family: 'Segoe UI', sans-serif;">
-            <h1 style="color: #00e676; border-bottom: 2px solid #00e676; padding-bottom: 10px;">NEON RICOCHET: DOKÜMANTASYON</h1>
-            
-            <section style="margin: 30px 0;">
-                <h2 style="color: #00e676; margin-bottom: 10px;">1. Oyun Felsefesi</h2>
-                <p style="line-height: 1.8; color: #ccc;">Neon Ricochet, minimalist estetik ve yüksek hassasiyetli fizik simülasyonlarının birleştiği dijital bir deneyimdir.</p>
-            </section>
-
-            <section style="margin: 30px 0; background: rgba(255,255,255,0.03); padding: 20px; border-radius: 10px;">
-                <h2 style="color: #00e676; margin-bottom: 10px;">2. Teknik Mimari</h2>
-                <p style="line-height: 1.8; color: #ccc;">Oyunumuz kendi geliştirdiğimiz çarpışma algılama algoritmaları ve optimize edilmiş Canvas API ile çalışır. oyunun markasi ve oyunun kendisi satiliktir geri bildirim kismindan konu iletisim bilgilerinizi gonerebilirsiniz en kisa zamanda size donus yapilacak</p>
-            </section>
-
-            <section style="margin: 30px 0;">
-                <h2 style="color: #00e676; margin-bottom: 10px;">3. Yasal Bildiriler</h2>
-                <p style="line-height: 1.8; color: #ccc;">Tüm hakları saklıdır. Oyun "olduğu gibi" sunulmaktadır.</p>
-            </section>
-
-            <h2 style="color: #00e676; margin-bottom: 15px;">5. İletişim</h2>
-            <form action="https://formspree.io/f/xnjedlwa" method="POST" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 50px;">
-                <textarea name="message" required placeholder="Geri bildiriminiz..." style="padding: 15px; border-radius: 8px; height: 120px; background: #1a1a2e; border: 1px solid #444; color: #fff;"></textarea>
-                <button type="submit" style="padding: 15px; background: #00e676; border: none; border-radius: 8px; color: #000; font-weight: bold; cursor: pointer;">MESAJI GÖNDER</button>
-            </form>
-            <button class="secondary-btn" onclick="menuyeDon()" style="width: 100%; margin-bottom: 50px;">MENÜYE DÖN</button>
+        
+        <div class="ad-container" style="margin: 20px;">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-4346551902420368"
+                 data-ad-slot="BURAYA_SLOT_ID_YAZ"
+                 data-ad-format="auto"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
+
+        <button onclick="oyunaBasla()">START GAME</button>
     </div>
 
     <div id="gamePage">
-        <div id="skor">Score: 0</div>
         <div id="speedControl">
             Speed: <input type="range" id="speedSlider" min="2" max="15" value="6">
         </div>
+        <button id="exitBtn" onclick="oyundanCik()">✕</button>
         <canvas id="oyunAlani"></canvas>
     </div>
 
     <script>
-        const menuPage = document.getElementById('menuPage'), infoPage = document.getElementById('infoPage'), gamePage = document.getElementById('gamePage');
-        const canvas = document.getElementById('oyunAlani'), ctx = canvas.getContext('2d'), skorEl = document.getElementById('skor');
-        const checkbox = document.getElementById('kullanimSartlari'), baslatBtn = document.getElementById('baslatBtn');
+        const canvas = document.getElementById('oyunAlani'), ctx = canvas.getContext('2d');
         const speedSlider = document.getElementById('speedSlider');
-        
-        let ball = { x: 0, y: 0, dx: 0, dy: 0, r: 8 };
-        let obstacles = [];
-        let score = 0;
-        let animationId;
+        let ball = { x: 0, y: 0, dx: 6, dy: 6, r: 8 };
+        let obstacles = [], animationId;
 
-        checkbox.addEventListener('change', () => { baslatBtn.disabled = !checkbox.checked; });
         function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.addEventListener('resize', resizeCanvas);
-
-        function oyunaBasla() {
-            if(!checkbox.checked) return;
-            menuPage.style.display = 'none'; gamePage.style.display = 'block';
-            resizeCanvas();
-            score = 0;
-            ball.x = canvas.width / 2; ball.y = canvas.height / 2;
-            ball.dx = 6; ball.dy = 6;
-            generateObstacles();
-            update();
-        }
 
         function generateObstacles() {
             obstacles = [];
@@ -102,47 +70,52 @@
             rows.forEach((count, rowIndex) => {
                 const y = rowHeight * (rowIndex + 1);
                 const spacing = canvas.width / (count + 1);
+                const w = (count === 1 || count === 2) ? 80 : 20;
+                const h = (count === 1 || count === 2) ? 20 : 80;
                 for (let i = 0; i < count; i++) {
-                    obstacles.push({ x: spacing * (i + 1) - 10, y: y, w: 20, h: 80, color: '#00e676' });
+                    obstacles.push({ x: (spacing * (i + 1)) - (w / 2), y: y - (h / 2), w: w, h: h });
                 }
             });
         }
 
         function update() {
             ctx.fillStyle = 'rgba(0, 0, 0, 0.3)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
             let speed = parseFloat(speedSlider.value);
-            let currentSpeed = Math.sqrt(ball.dx**2 + ball.dy**2);
-            ball.dx = (ball.dx / currentSpeed) * speed;
-            ball.dy = (ball.dy / currentSpeed) * speed;
-            
             ball.x += ball.dx;
             obstacles.forEach(o => {
                 if (ball.x + ball.r > o.x && ball.x - ball.r < o.x + o.w && ball.y + ball.r > o.y && ball.y - ball.r < o.y + o.h) {
                     ball.dx *= -1;
-                    ball.x = (ball.dx > 0) ? o.x + o.w + ball.r : o.x - ball.r;
-                    score += 10; skorEl.innerText = "Score: " + score;
                 }
             });
-            if (ball.x - ball.r < 0 || ball.x + ball.r > canvas.width) { ball.dx *= -1; ball.x = (ball.x < ball.r) ? ball.r : canvas.width - ball.r; }
+            if (ball.x - ball.r < 0 || ball.x + ball.r > canvas.width) ball.dx *= -1;
             
             ball.y += ball.dy;
             obstacles.forEach(o => {
                 if (ball.x + ball.r > o.x && ball.x - ball.r < o.x + o.w && ball.y + ball.r > o.y && ball.y - ball.r < o.y + o.h) {
                     ball.dy *= -1;
-                    ball.y = (ball.dy > 0) ? o.y + o.h + ball.r : o.y - ball.r;
-                    score += 10; skorEl.innerText = "Score: " + score;
                 }
             });
-            if (ball.y - ball.r < 0 || ball.y + ball.r > canvas.height) { ball.dy *= -1; ball.y = (ball.y < ball.r) ? ball.r : canvas.height - ball.r; }
+            if (ball.y - ball.r < 0 || ball.y + ball.r > canvas.height) ball.dy *= -1;
             
             ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2); ctx.fill();
-            obstacles.forEach(o => { ctx.fillStyle = o.color; ctx.fillRect(o.x, o.y, o.w, o.h); });
+            obstacles.forEach(o => { ctx.fillStyle = '#00e676'; ctx.fillRect(o.x, o.y, o.w, o.h); });
             animationId = requestAnimationFrame(update);
         }
 
-        function bilgiyeGit() { menuPage.style.display = 'none'; infoPage.style.display = 'flex'; }
-        function menuyeDon() { cancelAnimationFrame(animationId); gamePage.style.display = 'none'; infoPage.style.display = 'none'; menuPage.style.display = 'flex'; }
+        function oyunaBasla() {
+            document.getElementById('menuPage').style.display = 'none';
+            document.getElementById('gamePage').style.display = 'block';
+            resizeCanvas();
+            ball.x = canvas.width / 2; ball.y = canvas.height / 2;
+            generateObstacles();
+            update();
+        }
+
+        function oyundanCik() {
+            cancelAnimationFrame(animationId);
+            document.getElementById('gamePage').style.display = 'none';
+            document.getElementById('menuPage').style.display = 'flex';
+        }
     </script>
 </body>
 </html>
